@@ -1,0 +1,34 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "village-in-siege",
+          "appId": "1:1080779752145:android:392cc611a8cf8c00a6bbf0",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "village-in-siege",
+          "configurations": {
+            "android": "1:1080779752145:android:392cc611a8cf8c00a6bbf0",
+            "ios": "1:1080779752145:ios:419174293191d921a6bbf0",
+            "macos": "1:1080779752145:ios:419174293191d921a6bbf0",
+            "web": "1:1080779752145:web:0d49dbf2674e5568a6bbf0",
+            "windows": "1:1080779752145:web:733c5ec5d62a5979a6bbf0"
+          }
+        }
+      }
+    }
+  },
+  "emulators": {
+    "auth": {
+      "port": 9099
+    },
+    "ui": {
+      "enabled": true
+    },
+    "singleProjectMode": true
+  }
+}

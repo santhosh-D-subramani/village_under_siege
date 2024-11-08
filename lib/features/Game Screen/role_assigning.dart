@@ -76,8 +76,6 @@ class _RoleAssigningState extends State<RoleAssigning> {
       }
     });
 
-
-
   }
 
   void _showError(String message) {

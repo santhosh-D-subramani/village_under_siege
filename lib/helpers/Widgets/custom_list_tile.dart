@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 class CustomListTile extends StatelessWidget {
-  const CustomListTile({super.key, required this.child, this.color});
+  const CustomListTile({super.key, required this.child, this.color, this.needConstraints});
   final Widget child;
   final Color? color;
+  final bool? needConstraints;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +28,7 @@ class CustomListTile extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(15),
         child: Container(
-          constraints: const BoxConstraints(maxWidth: 600),
+          constraints: needConstraints ??true ? const BoxConstraints(maxWidth: 600):null ,
           color: color ??
               (isLightMode
                   ? theme.colorScheme.primaryContainer

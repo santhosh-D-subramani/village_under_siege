@@ -1,4 +1,6 @@
 
+import 'package:flutter/material.dart';
+
 const appName = 'Village Under Siege';
 
 List<String> normalVillagers = [
@@ -14,7 +16,18 @@ List<String> mafia = [
   'normal mafia'
 ];
 
+Color getDefaultColor(context, bool isSelected){
+  final ThemeData theme = Theme.of(context);
+  final bool isLightMode = theme.brightness == Brightness.light;
 
+ return isSelected
+      ? isLightMode
+      ? theme.colorScheme.onInverseSurface
+      : theme.colorScheme.inversePrimary
+      : isLightMode
+      ? theme.colorScheme.primaryContainer
+      : theme.colorScheme.onSecondary;
+}
 
 const String rules = '''
 Roles:

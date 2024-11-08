@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:village_under_siege/common.dart';
+import 'package:village_under_siege/features/Home%20Screen/Helpers/profile_screen.dart';
 import 'package:village_under_siege/features/Home%20Screen/Screens/create_new_room.dart';
+import 'package:village_under_siege/features/Home%20Screen/Screens/join_room.dart';
 import 'package:village_under_siege/helpers/Widgets/custom_list_tile.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -21,6 +23,10 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const FlutterLogo(
+              size: 100,
+            ),
+            const SizedBox(height: 8,),
             createRoom(context),
             joinRoom(context),
 
@@ -41,7 +47,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: const ButtonStyle(
                         shape: WidgetStatePropertyAll(BeveledRectangleBorder())
                     ),
-                    onPressed: (){}, child: const Text('Join Room')),
+                    onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return const JoinRoom();
+                }));
+              }, child: const Text('Join Room',style: TextStyle(fontSize: 20),)),
               ),
             ),
           );
@@ -64,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             return const CreateNewRoom(
                             );
                       }));
-                    }, child: const Text('Create Room')),
+                    }, child: const Text('Create Room',style: TextStyle(fontSize: 20))),
               ),
             ),
           );
@@ -76,7 +86,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
       leading:  Padding(
         padding: const EdgeInsets.all(8.0),
-        child: IconButton(icon:const Icon( Icons.person), onPressed: () {  },),
+        child: IconButton(icon:const Icon( Icons.person), onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return const ProfileScreen();
+            }));
+          },),
 
       ),
       title: const Text(appName),
