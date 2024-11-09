@@ -46,6 +46,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1080779752145',
     projectId: 'village-in-siege',
     authDomain: 'village-in-siege.firebaseapp.com',
+    databaseURL: 'https://village-in-siege-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'village-in-siege.firebasestorage.app',
     measurementId: 'G-HR5LMJKLX6',
   );
@@ -55,6 +56,7 @@ class DefaultFirebaseOptions {
     appId: '1:1080779752145:android:392cc611a8cf8c00a6bbf0',
     messagingSenderId: '1080779752145',
     projectId: 'village-in-siege',
+    databaseURL: 'https://village-in-siege-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'village-in-siege.firebasestorage.app',
   );
 
@@ -63,7 +65,9 @@ class DefaultFirebaseOptions {
     appId: '1:1080779752145:ios:419174293191d921a6bbf0',
     messagingSenderId: '1080779752145',
     projectId: 'village-in-siege',
+    databaseURL: 'https://village-in-siege-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'village-in-siege.firebasestorage.app',
+    iosClientId: '1080779752145-9tvfp7ns5nk7fnluk40v09snufk41v9i.apps.googleusercontent.com',
     iosBundleId: 'com.l2c.villageUnderSiege',
   );
 
@@ -72,7 +76,9 @@ class DefaultFirebaseOptions {
     appId: '1:1080779752145:ios:419174293191d921a6bbf0',
     messagingSenderId: '1080779752145',
     projectId: 'village-in-siege',
+    databaseURL: 'https://village-in-siege-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'village-in-siege.firebasestorage.app',
+    iosClientId: '1080779752145-9tvfp7ns5nk7fnluk40v09snufk41v9i.apps.googleusercontent.com',
     iosBundleId: 'com.l2c.villageUnderSiege',
   );
 
@@ -82,6 +88,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1080779752145',
     projectId: 'village-in-siege',
     authDomain: 'village-in-siege.firebaseapp.com',
+    databaseURL: 'https://village-in-siege-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'village-in-siege.firebasestorage.app',
     measurementId: 'G-1SK2PWNFPC',
   );

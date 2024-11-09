@@ -1,13 +1,11 @@
-import 'dart:math';
-
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:particles_flutter/component/particle/particle.dart';
-import 'package:particles_flutter/particles_engine.dart';
 import 'package:village_under_siege/common.dart';
+import 'package:village_under_siege/features/Home%20Screen/home_screen.dart';
 import 'package:village_under_siege/helpers/Widgets/custom_list_tile.dart';
-import 'package:village_under_siege/helpers/Widgets/particle_widget.dart';
-
+import 'package:firebase_database/firebase_database.dart';
+import '../../helpers/Widgets/particle_widget.dart';
 import '../../helpers/utils.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -23,19 +21,22 @@ class _LoginScreenState extends State<LoginScreen> {
       TextEditingController();
   final TextEditingController passwordTextEditingController =
       TextEditingController();
-  var acs = ActionCodeSettings(
-    // URL you want to redirect back to. The domain (www.example.com) for this
-    ///TODO: URL must be whitelisted in the Firebase Console.
-    ///maybe try with github pages.io thing
-      url: 'https://www.example.com/finishSignUp?cartId=1234',
-      // This must be true
-      handleCodeInApp: true,
-      iOSBundleId: 'com.l2c.village_under_siege',
-      androidPackageName: 'com.l2c.village_under_siege',
-      // installIfNotAvailable
-      androidInstallApp: true,
-      // minimumVersion
-      androidMinimumVersion: '21');
+
+  @override
+  void initState() {
+
+    User? user = FirebaseAuth.instance.currentUser;
+    if(user != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+          return const HomeScreen();
+        }));
+      });
+
+    }
+    super.initState();
+  }
+
   @override
   void dispose() {
     emailTextEditingController.dispose();
@@ -43,23 +44,63 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  void loginUser(){
+  void loginUser() async {
     if (_formKey.currentState?.validate() == true) {
+      try {
+        final userCredential =
+            await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: emailTextEditingController.text,
+          password: passwordTextEditingController.text,
+        );
 
-      FirebaseAuth.instance.sendSignInLinkToEmail(
-          email: emailTextEditingController.text, actionCodeSettings: acs)
-          .catchError((onError) => print('Error sending email verification $onError'))
-          .then((value) => print('Successfully sent email verification'));
-
-      // If the form is valid, display a snack-bar or take action
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Valid email!')),
-      );
+        if (userCredential.user != null) {
+          // Login successful, navigate to the home page
+          if (mounted) {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => const HomeScreen()),
+            );
+          }
+        }
+      } catch (e) {
+        // Handle login errors
+        if (kDebugMode) {
+          print('Error: $e');
+        }
+      }
     }
   }
-  void createAccount(){
 
+  Future<void> createAccount() async {
+    print(' createAccount()');
+    try {
+      final userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: emailTextEditingController.text,
+        password: passwordTextEditingController.text,
+      );
+
+    print(userCredential);
+    print(emailTextEditingController.text);
+    print(passwordTextEditingController.text);
+    DatabaseReference userRef = FirebaseDatabase.instance
+        .ref()
+        .child("Users")
+        .child(userCredential.user!.uid);
+    Map<String, dynamic> userData = {
+      'email': emailTextEditingController.text.toString(),
+      'uid': userCredential.user!.uid,
+    };
+    userRef.set(userData);
+      if (mounted) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
+        );
+      }
+    } on Exception catch (e) {
+      print(e);
+    }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,14 +110,14 @@ class _LoginScreenState extends State<LoginScreen> {
           padding: const EdgeInsets.all(8.0),
           child: Stack(
             children: [
-            //  const ParticleWidget(),
+             //const ParticleWidget(),
               Center(
                 child: CustomListTile(
                   color: getDefaultColor(context, true),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Form(
-key: _formKey,
+                      key: _formKey,
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -105,35 +146,41 @@ key: _formKey,
                               ),
                             ),
                           ),
-                          RichText(
-                            textAlign: TextAlign.center,
-                            text: const TextSpan(
-                              children: [
-                                WidgetSpan(
-                                  child: Icon(Icons.lock, size: 14),
-                                ),
-                                TextSpan(
-                                  text: ' Secure Password less Sign-in ',
-                                  style: TextStyle( fontSize: 14),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          // CustomListTile(
-                          //   needConstraints: false,
-                          //   child: Padding(
-                          //     padding: const EdgeInsets.all(8.0),
-                          //     child: TextFormField(
-                          //
-                          //       controller: passwordTextEditingController,
-                          //       decoration: const InputDecoration(
-                          //           border: InputBorder.none,
-                          //           icon: Icon(Icons.password),
-                          //           labelText: 'Password'),
-                          //     ),
+                          // RichText(
+                          //   textAlign: TextAlign.center,
+                          //   text: const TextSpan(
+                          //     children: [
+                          //       WidgetSpan(
+                          //         child: Icon(Icons.lock, size: 14),
+                          //       ),
+                          //       TextSpan(
+                          //         text: ' Secure Password less Sign-in ',
+                          //         style: TextStyle( fontSize: 14),
+                          //       ),
+                          //     ],
                           //   ),
                           // ),
+
+                          CustomListTile(
+                            needConstraints: false,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter an Password';
+                                  }
+                                  return null;
+                                },
+                                controller: passwordTextEditingController,
+                                decoration: const InputDecoration(
+
+                                    border: InputBorder.none,
+                                    icon: Icon(Icons.password),
+                                    labelText: 'Password'),
+                              ),
+                            ),
+                          ),
                           Container(
                             width: MediaQuery.of(context).size.width,
                             constraints: const BoxConstraints(
@@ -155,12 +202,10 @@ key: _formKey,
                               color: Colors.transparent,
                               child: TextButton(
                                 style: const ButtonStyle(
-
                                   side: WidgetStatePropertyAll(BorderSide(
                                       color: Colors.black,
                                       style: BorderStyle.solid)),
                                 ),
-
                                 onPressed: createAccount,
                                 child: const Text('Create Account'),
                               ),
@@ -168,24 +213,24 @@ key: _formKey,
                           ),
                           const SizedBox(
                             height: 20,
-                          ),
-                          const Center(child: Text('Or Login with')),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              CustomListTile(
-                                child: TextButton.icon(
-                                    style: const ButtonStyle(
-                                        shape: WidgetStatePropertyAll(
-                                            BeveledRectangleBorder())),
-                                    onPressed: () {},
-                                    icon: const Icon(Icons.ac_unit),
-                                    label: const Text('Google Sign-In')),
-                              ),
-                            ],
+                            // ),
+                            // const Center(child: Text('Or Login with')),
+                            // const SizedBox(
+                            //   height: 20,
+                            // ),
+                            // Row(
+                            //   mainAxisSize: MainAxisSize.min,
+                            //   children: [
+                            //     CustomListTile(
+                            //       child: TextButton.icon(
+                            //           style: const ButtonStyle(
+                            //               shape: WidgetStatePropertyAll(
+                            //                   BeveledRectangleBorder())),
+                            //           onPressed: () {},
+                            //           icon: const Icon(Icons.ac_unit),
+                            //           label: const Text('Google Sign-In')),
+                            //     ),
+                            //   ],
                           )
                         ],
                       ),
@@ -199,7 +244,4 @@ key: _formKey,
       ),
     );
   }
-
-
 }
-

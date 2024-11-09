@@ -1,3 +1,7 @@
+import 'dart:developer';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import 'package:village_under_siege/features/Home%20Screen/Screens/lobby_screen.dart';
@@ -14,10 +18,30 @@ class CreateNewRoom extends StatefulWidget {
 class _CreateNewRoomState extends State<CreateNewRoom> {
   final _playersCountTextEditingController = TextEditingController();
   int _selectedValue = 1;
+String userID = '';
+String userEmail = '';
+String uniqueRoomId = '';
+late  DatabaseReference roomRef;
+late  DatabaseReference newRoomRef;
+
 
   @override
   void initState() {
 _playersCountTextEditingController.text = '10';
+roomRef = FirebaseDatabase.instance
+    .ref("Rooms");
+  newRoomRef = roomRef.push(); // This creates a unique key for each entry
+ uniqueRoomId = newRoomRef.key ?? '';
+
+
+
+if (FirebaseAuth.instance.currentUser != null) {
+  setState(() {
+    userID = FirebaseAuth.instance.currentUser?.uid ?? '';
+    userEmail = FirebaseAuth.instance.currentUser?.email ?? '';
+  });
+}
+
     super.initState();
   }
   @override
@@ -39,8 +63,6 @@ _playersCountTextEditingController.text = '10';
         child: CustomListTile(
           child: TextButton(
               onPressed: () {
-                var uuid = const Uuid();
-                var id = uuid.v4();
                 if(_playersCountTextEditingController.text.isEmpty){
                   Utils.showAlertPopUp(context, 'No Players',
                       ' 0 Players To start a game');
@@ -56,10 +78,20 @@ _playersCountTextEditingController.text = '10';
                   return;
                 }
 
+                newRoomRef.set({
+                  'roomId': uniqueRoomId,
+                  'difficulty':_selectedValue,
+                  'playerCount':playerCount,
+                  'organiser': userID.trim(),
+                  'players': [Utils.trimGmail(userEmail.trim())],
+                }).then((_) => {
+                log('Room created with ID: $uniqueRoomId')
+                });
+
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
                   return LobbyScreen(
-                    roomID: id,
-                    difficulty: _selectedValue, playerCount: playerCount,
+                    roomID: uniqueRoomId,
+                    difficulty: _selectedValue,
                   );
                 }));
               },

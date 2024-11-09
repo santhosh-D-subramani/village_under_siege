@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 const appName = 'Village Under Siege';
+const packageName = 'com.l2c.village_under_siege';
 
 List<String> normalVillagers = [
   'doctor',

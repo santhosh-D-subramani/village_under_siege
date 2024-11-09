@@ -32,16 +32,16 @@ class _RoleAssigningState extends State<RoleAssigning> {
       "Villager: Police",
       "Villager: Rambo",
       "Villager: Saint",
-      "Villager: Lover",
+      "Villager: Lover1",
+      "Villager: Lover2",
       "Villager: Normal",
       "Mafia: Godfather",
-      "Mafia: Lover",
       "Mafia: Normal",
       "Mafia: Normal"
     ]);
 
     int additionalPlayers = playerCount - 10;
-    int additionalMafias = (additionalPlayers / 4).floor();
+    int additionalMafias = (additionalPlayers / 3).floor();
     int additionalVillagers = additionalPlayers - additionalMafias;
 
     // Add extra Mafia members
@@ -68,13 +68,13 @@ class _RoleAssigningState extends State<RoleAssigning> {
       playerId++;
     }
 
-    Future.delayed(const Duration(seconds: 6), (){
-      if (mounted) {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-          return const GameScreen();
-        }));
-      }
-    });
+    // Future.delayed(const Duration(seconds: 6), (){
+    //   if (mounted) {
+    //     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+    //       return const GameScreen();
+    //     }));
+    //   }
+    // });
 
   }
 
